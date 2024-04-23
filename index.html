@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="./index.css" rel="stylesheet" />
+    <title>ReserveBar - Ralph Lauren</title>
+    <script
+      id="liquidScriptConfigs"
+      data-liquid-element-id="#product-element"
+      data-liquid-token="U2FsdGVkX190TL16w4qpkeLOFZS58SG/x65mllH2UT1WFVMAAjdoX+qy9yVzd3xROfATb5NoXz75QwJOecFawzxZcy8BnS5HcNWQM2dZWshXKEuqFMznClUt2HfBnTLXgm9hqKrsTLyCCOCjic2OD/aP+uSBKosqu6lHS62KbTHGnE74i9CDKp/MzoYWLnBNF/zvm6JCyoQ08nlK6B3LLeFdYdmIbOeirq733yw/uzjR9d+Y8kMSGw815wB+nvrtMkQtdFRdu3LWbIzizlEhDQ=="
+      data-liquid-product="GROUPING-2347346"
+      type="text/javascript"
+      src="https://elements-sdk.liquidcloud.app/liquid-elements.js"
+    ></script>
+  </head>
+  <body class="bg-white text-[#041e3a]">
+    <div class="flex justify-center p-8 pb-0">
+      <img
+        src="assets/imgs/ReserveBar-LogoBlack.png"
+        height="200"
+        class="max-h-[75px]"
+      />
+    </div>
+    <div id="products"></div>
+    <section
+      class="flex flex-col items-center w-full border-t border-[#eee] p-12 uppercase text-[12px] mt-40"
+    >
+      <div>
+        <p class="max-w-[600px] my-4 text-center">
+          All orders are fulfilled by ReserveBar, an independent third party
+          that facilitates orders with licensed retailers in your state. By
+          proceeding to checkout, you are accepting the ReserveBar Privacy
+          Policy and Terms and Conditions of Sale.
+        </p>
+      </div>
+      <ul class="flex flex-col items-center">
+        <li class="FooterBar_linksLiPipe">
+          <a
+            class="FooterBar_link"
+            target="_blank"
+            href="https://www2.reservebar.com/pages/terms.html"
+            >ReserveBar Terms and Conditions</a
+          >
+        </li>
+        <li class="FooterBar_linksLiPipe">
+          <a
+            class="FooterBar_link"
+            target="_blank"
+            href="https://www2.reservebar.com/pages/privacy-policy.html"
+            >ReserveBar Privacy Policy</a
+          >
+        </li>
+        <li class="FooterBar_linksLiPipe">
+          <a
+            class="FooterBar_link"
+            target="_blank"
+            href="https://help.reservebar.com/"
+            >ReserveBar FAQs</a
+          >
+        </li>
+      </ul>
+    </section>
+    <script>
+      const products = [
+        {
+          name: "Acqua Panna Flat Water",
+          size: "250mL",
+          id: "GROUPING-2347346",
+        },
+        {
+          name: "Coca-Cola",
+          size: "7.5oz",
+          id: "GROUPING-2347344",
+        },
+        {
+          name: "Coca-Cola Diet Coke",
+          size: "8oz",
+          id: "GROUPING-2347391",
+        },
+        {
+          name: "Moët & Chandon Imperial Brut Champagne",
+          size: "750mL",
+          id: "GROUPING-2347348",
+        },
+        {
+          name: "Pellegrino Sparkling Mineral Water",
+          size: "250mL",
+          id: "GROUPING-2347347",
+        },
+        {
+          name: "Schwepps Ginger Ale",
+          size: "10oz",
+          id: "GROUPING-2347345",
+        },
+      ];
+
+      const setElement = (btn) => {
+        const groupingId = btn.getAttribute("id");
+        console.log(groupingId);
+        const value = `
+               <div id="product-element" style="max-width: 100%; display: flex; justify-content: center; width: 100%;"><iframe id="liquidIframe" src="https://elements.liquidapp.cloud/elements/product?token=U2FsdGVkX190TL16w4qpkeLOFZS58SG/x65mllH2UT1WFVMAAjdoX+qy9yVzd3xROfATb5NoXz75QwJOecFawzxZcy8BnS5HcNWQM2dZWshXKEuqFMznClUt2HfBnTLXgm9hqKrsTLyCCOCjic2OD/aP+uSBKosqu6lHS62KbTHGnE74i9CDKp/MzoYWLnBNF/zvm6JCyoQ08nlK6B3LLeFdYdmIbOeirq733yw/uzjR9d+Y8kMSGw815wB+nvrtMkQtdFRdu3LWbIzizlEhDQ==&amp;p=${groupingId}&amp;f=product-element" data-liquid-id="product-element-iframe" style="background-color: transparent; border: none; width: 100%; max-width: 750px; min-width: 350px; height: 450px; margin-top: 100px"></iframe></div>
+               `;
+
+        [...document.querySelectorAll(".content-grouping")].forEach(
+          (contentGrouping) => {
+            contentGrouping.innerHTML = "";
+          }
+        );
+
+        [...document.querySelectorAll(".buy-now")].forEach((buyNow) => {
+          buyNow.style.display = "block";
+        });
+
+        document.querySelector(`#content-${groupingId}`).innerHTML = value;
+        btn.style.display = "none";
+      };
+
+      document.addEventListener("DOMContentLoaded", (event) => {
+        products.forEach((product) => {
+          const productContent = document.createElement("div");
+          productContent.innerHTML = `
+          <div class="flex items-center mt-16 sm:mt-40 border-t pt-16 sm:pt-0 sm:border-none">
+            <h2
+              class="sm:text-nowrap pl-0 sm:pl-8 uppercase tracking-widest text-[1.5rem] text-center mx-auto sm:text-[2rem] font-leJeune"
+            >
+              ${product.name}
+            </h2>
+            <div class="hidden sm:block h-[1px] w-full mx-8 bg-[#ddd]"></div>
+          </div>
+          <div class="flex flex-wrap sm:flex-nowrap items-center justify-between mx-8">
+            <div class="flex items-center justify-center w-full">
+              <img src="assets/imgs/${product.id}.png" class="max-h-[650px]" />
+            </div>
+            <div class="buy-now flex items-center justify-center w-full">
+              <button
+                onclick="setElement(this)"
+                id="${product.id}"
+                class="buy-now uppercase tracking-6 py-4 px-24 bg-[#041e3a] border border-[#041e3a] text-[14px] text-white hover:text-[#041e3a] hover:bg-white transition-all active:bg-[#f1f1f1] cursor-pointer mx-auto"
+              >
+                Buy Now
+              </button>
+              <div class="content-grouping" id="content-${product.id}"></div>
+            </div>
+          </div>
+      `;
+          document.querySelector("#products").append(productContent);
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    @font-face {
+        font-family: 'FoundersGrotesk';
+        font-style: normal;
+        src: url(/assets/fonts/FoundersGroteskTextWeb-Regular.woff) format('woff');
+    }
+
+    @font-face {
+        font-family: 'LeJeuneDeck';
+        font-style: normal;
+        src: url(/assets/fonts/LeJeuneDeck-Regular-Web.woff) format('woff');
+    }
+}

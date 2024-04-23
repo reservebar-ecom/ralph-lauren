@@ -1,0 +1,25 @@
+{
+  "name": "ralph-lauren",
+  "version": "1.0.0",
+  "description": "ralph lauren - reservebar",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"npx tailwindcss -i ./main.css -o ./index.css --watch\" \"npx five-server\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "live-server": "^1.2.2",
+    "open": "^10.1.0",
+    "tailwindcss": "^3.4.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reservebar-ecom/ralph-lauren.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/reservebar-ecom/ralph-lauren/issues"
+  },
+  "homepage": "https://github.com/reservebar-ecom/ralph-lauren#readme"
+}
