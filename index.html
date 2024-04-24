@@ -22,7 +22,7 @@
         class="max-h-[75px]"
       />
     </div>
-    <div id="products"></div>
+    <div id="products" class="w-full flex flex-col items-center"></div>
     <section class="flex flex-col items-center mt-12 pt-12 border-t">
       <h2 class="text-[2rem] font-bold">Questions about your order?</h2>
       <h2 class="text-[2rem] font-bold">Contact <a href="mailto: concierge@reservebar.com">concierge@reservebar.com</a></h2>
@@ -78,7 +78,7 @@
           id: "GROUPING-2347344",
         },
         {
-          name: "Coca-Cola Diet Coke",
+          name: "Diet Coca-Cola",
           size: "8oz",
           id: "GROUPING-2347391",
         },
@@ -123,8 +123,9 @@
       document.addEventListener("DOMContentLoaded", (event) => {
         products.forEach((product) => {
           const productContent = document.createElement("div");
+          productContent.classList.add('max-w-[1200px]', 'w-full');
           productContent.innerHTML = `
-          <div class="flex items-center mt-16 sm:mt-40 border-t pt-16 sm:pt-0 sm:border-none">
+          <div class="flex items-center mt-16 sm:mt-52 border-t pt-16 sm:pt-0 sm:border-none">
             <h2
               class="sm:text-nowrap pl-0 sm:pl-8 uppercase tracking-widest text-[1.5rem] text-center mx-auto sm:text-[2rem] font-leJeune"
             >
