@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="./index.css" rel="stylesheet" />
+  <title>ReserveBar Demo - Ralph Lauren</title>
+</head>
+
+<body class="bg-white text-[#041e3a]">
+  <div id="cart-open-button-demo"></div>
+
+  <div class="flex justify-center p-8 pb-0">
+    <a href="/">
+      <img src="assets/imgs/ReserveBar-LogoBlack.png" height="200" class="max-h-[75px]" />
+    </a>
+  </div>
+
+  <div id="products" class="w-full flex flex-col items-center">
+
+    <!-- Product Demo 1 -->
+    <div class="max-w-[1200px] w-full">
+      <div class="flex items-center mt-16 sm:mt-52 border-t pt-16 sm:pt-0 sm:border-none">
+        <h2
+          class="sm:text-nowrap pl-0 sm:pl-8 uppercase tracking-widest text-[1.5rem] text-center mx-auto sm:text-[2rem] font-leJeune">
+          Moët & Chandon Imperial Brut Champagne
+        </h2>
+        <div class="hidden sm:block h-[1px] w-full mx-8 bg-[#ddd]"></div>
+      </div>
+      <div class="flex flex-wrap sm:flex-nowrap items-center justify-between mx-8">
+        <div id="product-demo"></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="flex flex-col items-center mt-12 pt-12 border-t">
+    <h2 class="text-[2rem] font-bold">Questions about your order?</h2>
+    <h2 class="text-[2rem] font-bold">Contact <a href="mailto: concierge@reservebar.com">concierge@reservebar.com</a>
+    </h2>
+    <h2 class="text-[2rem] font-bold">or go to our <a href="/faq" target="_blank">FAQ</a></h2>
+  </section>
+  <section class="flex flex-col items-center w-full p-8 uppercase text-[12px]">
+    <div>
+      <p class="max-w-[600px] my-4 text-center">
+        All orders are fulfilled by ReserveBar, an independent third party
+        that facilitates orders with licensed retailers in your state. By
+        proceeding to checkout, you are accepting the ReserveBar Privacy
+        Policy and Terms and Conditions of Sale.
+      </p>
+    </div>
+    <ul class="flex flex-col items-center">
+      <li class="FooterBar_linksLiPipe">
+        <a class="FooterBar_link" target="_blank" href="https://www2.reservebar.com/pages/terms.html">ReserveBar Terms
+          and Conditions</a>
+      </li>
+      <li class="FooterBar_linksLiPipe">
+        <a class="FooterBar_link" target="_blank"
+          href="https://www2.reservebar.com/pages/privacy-policy.html">ReserveBar Privacy Policy</a>
+      </li>
+      <li class="FooterBar_linksLiPipe">
+        <a class="FooterBar_link" target="_blank" href="https://help.reservebar.com/">ReserveBar FAQs</a>
+      </li>
+    </ul>
+  </section>
+
+  <style>
+    #cart-open-button-demo {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      cursor: pointer;
+      background: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      display: block;
+      z-index: 1000;
+    }
+  </style>
+
+  <script type="text/javascript"
+    src="https://storage.googleapis.com/elements-sdk/all/beta/liquidcommerce-elements-sdk.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", async (event) => {
+      const API_KEY = "U2FsdGVkX19PqC3kXcutZ+/+7/RVGLZgqZpBHex533UEcEoegq2XIJbl5eZHXvkKBH6sItm123krl6bX0o8GN7O6zDSgZo/O9xBJADcRVveOViy8bpoeCojQzBH/8NNgrz8DNtJvROtfAaqHtqbd8MgUt2HaMTTccQL3cUjYBXlooyrEDKXFoY/eJKXvdEz2bzRHpkOLs8v2oZ8BSC1Ge1diQvCsWgsSoesnLf00nsuyA+9RT+Y8m0X94TtmPrGy";
+
+      const client = await window.Elements(API_KEY, {
+        env: "development",
+        enableDebugging: true,
+        customTheme: {
+          product: {
+            layout: {
+              showTitle: false,
+              showImages: true,
+              showDescription: false
+            }
+          }
+        }
+      });
+
+      await client.injectProductElement("product-demo", "00088110551056");
+
+      client.buttons.openCart("cart-open-button-demo");
+    });
+  </script>
+</body>
+
+</html>
