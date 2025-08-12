@@ -17,22 +17,7 @@
     </a>
   </div>
 
-  <div id="products" class="w-full flex flex-col items-center">
-
-    <!-- Product Demo 1 -->
-    <div class="max-w-[1200px] w-full">
-      <div class="flex items-center mt-16 sm:mt-52 border-t pt-16 sm:pt-0 sm:border-none">
-        <h2
-          class="sm:text-nowrap pl-0 sm:pl-8 uppercase tracking-widest text-[1.5rem] text-center mx-auto sm:text-[2rem] font-leJeune">
-          Moët & Chandon Imperial Brut Champagne
-        </h2>
-        <div class="hidden sm:block h-[1px] w-full mx-8 bg-[#ddd]"></div>
-      </div>
-      <div class="flex flex-wrap sm:flex-nowrap items-center justify-between mx-8">
-        <div id="product-demo"></div>
-      </div>
-    </div>
-  </div>
+  <div id="products" class="w-full flex flex-col items-center"></div>
 
   <section class="flex flex-col items-center mt-12 pt-12 border-t">
     <h2 class="text-[2rem] font-bold">Questions about your order?</h2>
@@ -78,10 +63,59 @@
     }
   </style>
 
-  <script type="text/javascript"
-    src="https://storage.googleapis.com/elements-sdk/all/beta/liquidcommerce-elements-sdk.min.js"></script>
+  <script type="text/javascript" src="https://storage.googleapis.com/elements-sdk/all/beta/liquidcommerce-elements-sdk.min.js"></script>
+  <!-- <script type="text/javascript" src="./../../liquidcommerce/elements-sdk/umd/liquidcommerce-elements-sdk.min.js"></script> -->
+
   <script>
     document.addEventListener("DOMContentLoaded", async (event) => {
+      const products = [
+        {
+          name: "Woodford Reserve Double Oaked Kentucky Bourbon Whiskey",
+          upc: "00081128001209",
+        },
+        {
+          name: "Acqua Panna Flat Water",
+          upc: "00041508600156",
+        },
+        {
+          name: "Pellegrino Sparkling Mineral Water",
+          upc: "00041508803052",
+        },
+        {
+          name: "Moët & Chandon Imperial Brut Champagne",
+          upc: "00088110551056",
+        },
+        {
+          name: "New Belgium Fat Tire Amber Ale",
+          upc: "00754527000240",
+        },
+        {
+          name: "Stella Artois",
+          upc: "00786150000144",
+        },
+      ];
+
+      products.forEach((product) => {
+        const productContent = document.createElement("div");
+        productContent.classList.add('max-w-[1200px]', 'w-full');
+
+        productContent.innerHTML = `
+          <div class="flex items-center mt-16 sm:mt-52 border-t pt-16 sm:pt-0 sm:border-none">
+            <h2
+              class="sm:text-nowrap pl-0 sm:pl-8 uppercase tracking-widest text-[1.5rem] text-center mx-auto sm:text-[2rem] font-leJeune"
+            >
+              ${product.name}
+            </h2>
+            <div class="hidden sm:block h-[1px] w-full mx-8 bg-[#ddd]"></div>
+          </div>
+          <div class="flex flex-wrap sm:flex-nowrap items-center justify-between mx-8">
+              <div class="content-grouping" id="content-${product.upc}"></div>
+          </div>
+        `;
+
+        document.querySelector("#products").append(productContent);
+      });
+
       const API_KEY = "U2FsdGVkX19PqC3kXcutZ+/+7/RVGLZgqZpBHex533UEcEoegq2XIJbl5eZHXvkKBH6sItm123krl6bX0o8GN7O6zDSgZo/O9xBJADcRVveOViy8bpoeCojQzBH/8NNgrz8DNtJvROtfAaqHtqbd8MgUt2HaMTTccQL3cUjYBXlooyrEDKXFoY/eJKXvdEz2bzRHpkOLs8v2oZ8BSC1Ge1diQvCsWgsSoesnLf00nsuyA+9RT+Y8m0X94TtmPrGy";
 
       const client = await window.Elements(API_KEY, {
@@ -98,7 +132,12 @@
         }
       });
 
-      await client.injectProductElement("product-demo", "00088110551056");
+      const normalizedProductIdentifiers = products.map(p => ({
+        containerId: `content-${p.upc}`,
+        identifier: p.upc
+      }));
+
+      await client.injectProductElement(normalizedProductIdentifiers);
 
       client.buttons.openCart("cart-open-button-demo");
     });
