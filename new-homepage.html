@@ -84,7 +84,7 @@
       <!-- Mobile Layout -->
       <div class="md:hidden">
         <!-- First Row: Logo -->
-        <div class="flex justify-center px-8 py-4 border-b border-gray-100">
+        <div class="flex justify-center px-8 py-2 border-b border-gray-100">
           <div class="text-center">
             <a href="/" class="flex items-center justify-center space-x-2 text-lg font-bold">
               <span class="text-[#041e3a]">RalphLauren</span>
@@ -117,19 +117,20 @@
     </header>
 
     <!-- Products Section -->
-    <section class="py-8">
-      <div id="products" class="max-w-7xl mx-auto"></div>
-    </section>
-    <!-- Questions Section -->
-    <section class="flex flex-col items-center p-8 bg-gray-50">
-      <h2 class="text-3xl font-bold text-[#041e3a] mb-4">Questions about your order?</h2>
-      <div class="text-center space-y-2">
-        <p class="text-lg">Contact <a href="mailto:concierge@reservebar.com" class="text-[#041e3a] underline font-medium">concierge@reservebar.com</a> or visit our <a href="/faq" target="_blank" class="text-[#041e3a] underline font-medium">FAQ</a></p>
-      </div>
+    <section>
+      <div id="products"></div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-white py-12 px-8 border-t border-gray-200">
+    <footer class="bg-white p-8 border-t border-gray-200">
+      <!-- Questions Section -->
+      <section class="flex flex-col items-center pb-8">
+        <h2 class="text-3xl font-bold text-[#041e3a] mb-2 text-center">Questions about your order?</h2>
+        <div class="text-center space-y-2">
+          <p class="text-lg">Contact <a href="mailto:concierge@reservebar.com" class="text-[#041e3a] underline font-medium">concierge@reservebar.com</a> or visit our <a href="/faq" target="_blank" class="text-[#041e3a] underline font-medium">FAQ</a></p>
+        </div>
+      </section>
+
       <div class="max-w-4xl mx-auto">
         <!-- Legal Notice -->
         <div class="text-center mb-8">
@@ -178,65 +179,84 @@
           {
             name: "Woodford Reserve Double Oaked Kentucky Bourbon Whiskey",
             upc: "00081128001209",
-            image: "GROUPING-2534779"
+            image: "GROUPING-2534779",
+            description: "Woodford Reserve Double Oaked is a rich, full-bodied bourbon with a deep amber color and complex flavor profile. Aged in two separate oak barrels, it offers notes of caramel, vanilla, and toasted oak, making it a favorite among bourbon enthusiasts."
           },
           {
             name: "Acqua Panna Flat Water",
             upc: "00041508600156",
-            image: "GROUPING-2347346"
+            image: "GROUPING-2347346",
+            description: "Acqua Panna is a premium still water sourced from the hills of Tuscany, Italy. Known for its smooth taste and balanced mineral content, it is the perfect accompaniment to fine dining and gourmet experiences."
           },
           {
             name: "Pellegrino Sparkling Mineral Water",
             upc: "00041508803052",
-            image: "GROUPING-2347347"
+            image: "GROUPING-2347347",
+            description: "San Pellegrino is a renowned sparkling mineral water from Italy, celebrated for its crisp, refreshing taste and fine bubbles. It pairs excellently with meals and is a staple in upscale restaurants worldwide."
           },
           {
             name: "Moët & Chandon Imperial Brut Champagne",
             upc: "00088110551056",
-            image: "GROUPING-2347348"
+            image: "GROUPING-2347348",
+            description: "Moët & Chandon Imperial Brut is a classic champagne known for its vibrant intensity and elegant style. With notes of green apple, citrus, and brioche, it is perfect for celebrations and special occasions."
           },
           {
             name: "New Belgium Fat Tire Amber Ale",
             upc: "00754527000240",
-            image: "GROUPING-2500074"
+            image: "GROUPING-2500074",
+            description: "New Belgium Fat Tire Amber Ale is a well-balanced beer with a toasty malt character and a hint of caramel sweetness. Its smooth finish and approachable flavor make it a favorite among craft beer enthusiasts."
           },
           {
             name: "Stella Artois",
             upc: "00786150000144",
-            image: "GROUPING-2500075"
+            image: "GROUPING-2500075",
+            description: "Stella Artois is a premium lager with a rich heritage dating back to 1366. Known for its crisp, refreshing taste and subtle hop bitterness, it is a popular choice for those seeking a high-quality beer experience."
           },
         ];
 
-        // Create alternating product rows
+        // Create product cards in demo site style
         products.forEach((product, index) => {
           const isEven = index % 2 === 0;
-          const productRow = document.createElement("div");
-          productRow.className = "grid grid-cols-1 lg:grid-cols-2 gap-8 items-center py-16 px-8 border-b border-gray-100 last:border-b-0";
+          const productCard = document.createElement("div");
+          const bgColor = isEven ? "bg-white" : "bg-gray-50";
+          productCard.className = `grid grid-cols-1 lg:grid-cols-2 gap-12 items-start py-20 px-8 w-full ${bgColor}`;
           
           const imageSection = `
             <div class="flex justify-center ${isEven ? 'lg:order-1' : 'lg:order-2'}">
-              <img 
-                src="assets/imgs/${product.image}.png" 
-                alt="${product.name}"
-                class="max-w-full max-h-[500px] object-contain"
-              />
+              <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100 max-w-md">
+                <img 
+                  src="assets/imgs/${product.image}.png" 
+                  alt="${product.name}"
+                  class="w-full h-auto object-contain max-h-[400px]"
+                />
+              </div>
             </div>
           `;
           
           const productSection = `
-            <div class="flex flex-col justify-center ${isEven ? 'lg:order-2' : 'lg:order-1'} space-y-6">
-              <div class="flex items-center">
-                <h2 class="text-2xl md:text-3xl font-leJeune uppercase tracking-widest text-[#041e3a]">
+            <div class="flex flex-col justify-start ${isEven ? 'lg:order-2' : 'lg:order-1'} space-y-6">
+              <div class="space-y-4">
+                <h2 class="text-2xl md:text-3xl font-light text-gray-900 leading-tight">
                   ${product.name}
                 </h2>
-                <div class="hidden lg:block h-[1px] flex-1 ml-8 bg-gray-300"></div>
+                <p class="text-sm text-gray-600 leading-relaxed">
+                  ${product.description}
+                </p>
               </div>
-              <div id="content-${product.upc}" class="min-h-[200px]"></div>
+              <div id="content-${product.upc}" class="min-h-[300px]"></div>
             </div>
           `;
           
-          productRow.innerHTML = imageSection + productSection;
-          document.querySelector("#products").appendChild(productRow);
+          const wrapper = document.createElement("div");
+          wrapper.className = `w-full ${bgColor}`;
+          wrapper.innerHTML = `
+            <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-start py-20 px-8">
+              ${imageSection}
+              ${productSection}
+            </div>
+          `;
+          
+          document.querySelector("#products").appendChild(wrapper);
         });
 
         // Initialize Elements v2

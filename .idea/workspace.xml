@@ -4,15 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="61e52795-3e78-42a0-924a-da8809051d21" name="Changes" comment="fix(elements): update URL for elements SDK">
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.agent.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.edit.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/new-homepage.html" afterDir="false" />
+    <list default="true" id="61e52795-3e78-42a0-924a-da8809051d21" name="Changes" comment="feat(homepage): add new homepage design with SEO optimizations and product sections">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tailwind.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/tailwind.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/new-homepage.html" beforeDir="false" afterPath="$PROJECT_DIR$/new-homepage.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,7 +47,7 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "fix/new-homepage-design-elements-v2",
     "junie.onboarding.icon.badge.shown": "true",
     "last_opened_file_path": "/Users/alban/Desktop/syntacticops/repos/reservebar-ecom/ralph-lauren",
     "node.js.detected.package.eslint": "true",
@@ -88,7 +83,7 @@
       <workItem from="1756475253485" duration="121000" />
       <workItem from="1758116611828" duration="618000" />
       <workItem from="1758117406209" duration="2000" />
-      <workItem from="1758118446283" duration="2874000" />
+      <workItem from="1758118446283" duration="3947000" />
     </task>
     <task id="LOCAL-00001" summary="fix(elements): update URL for elements SDK">
       <option name="closed" value="true" />
@@ -98,7 +93,15 @@
       <option name="project" value="LOCAL" />
       <updated>1756475295483</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="feat(homepage): add new homepage design with SEO optimizations and product sections">
+      <option name="closed" value="true" />
+      <created>1758121361365</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1758121361365</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -106,6 +109,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="fix(elements): update URL for elements SDK" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix(elements): update URL for elements SDK" />
+    <MESSAGE value="feat(homepage): add new homepage design with SEO optimizations and product sections" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(homepage): add new homepage design with SEO optimizations and product sections" />
   </component>
 </project>
