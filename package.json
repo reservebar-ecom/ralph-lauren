@@ -1,7 +1,7 @@
 {
   "name": "ralph-lauren",
   "version": "1.0.0",
-  "description": "ralph lauren - reservebar",
+  "description": "ralph lauren - ReserveBar",
   "main": "index.js",
   "scripts": {
     "start": "concurrently \"npx tailwindcss -i ./main.css -o ./index.css --watch\" \"npx five-server\""

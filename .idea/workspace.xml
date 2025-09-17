@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="61e52795-3e78-42a0-924a-da8809051d21" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/elements-demo-v2.html" beforeDir="false" afterPath="$PROJECT_DIR$/elements-demo-v2.html" afterDir="false" />
+    <list default="true" id="61e52795-3e78-42a0-924a-da8809051d21" name="Changes" comment="feat(homepage): add new homepage design with SEO optimizations and product sections">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/new-homepage.html" beforeDir="false" afterPath="$PROJECT_DIR$/new-homepage.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -10,6 +15,11 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -32,19 +42,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/alban/Desktop/syntacticops/repos/reservebar-ecom/ralph-lauren&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "fix/new-homepage-design-elements-v2",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "/Users/alban/Desktop/syntacticops/repos/reservebar-ecom/ralph-lauren",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "/Applications/WebStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -60,11 +80,36 @@
       <option name="presentableId" value="Default" />
       <updated>1756475030557</updated>
       <workItem from="1756475031976" duration="216000" />
-      <workItem from="1756475253485" duration="11000" />
+      <workItem from="1756475253485" duration="121000" />
+      <workItem from="1758116611828" duration="618000" />
+      <workItem from="1758117406209" duration="2000" />
+      <workItem from="1758118446283" duration="3947000" />
     </task>
+    <task id="LOCAL-00001" summary="fix(elements): update URL for elements SDK">
+      <option name="closed" value="true" />
+      <created>1756475295483</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1756475295483</updated>
+    </task>
+    <task id="LOCAL-00002" summary="feat(homepage): add new homepage design with SEO optimizations and product sections">
+      <option name="closed" value="true" />
+      <created>1758121361365</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1758121361365</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="fix(elements): update URL for elements SDK" />
+    <MESSAGE value="feat(homepage): add new homepage design with SEO optimizations and product sections" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(homepage): add new homepage design with SEO optimizations and product sections" />
   </component>
 </project>
