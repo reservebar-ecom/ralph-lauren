@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="61e52795-3e78-42a0-924a-da8809051d21" name="Changes" comment="fix(new-hp): move to prod and update product upcs and description">
-      <change afterPath="$PROJECT_DIR$/assets/imgs/old-GROUPING-2347346.png" afterDir="false" />
+    <list default="true" id="61e52795-3e78-42a0-924a-da8809051d21" name="Changes" comment="fix(workspace): update recent file paths and task summaries in workspace configuration">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/imgs/GROUPING-2347346.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/imgs/GROUPING-2347346.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/elements-demo-v2.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/new-homepage.html" beforeDir="false" afterPath="$PROJECT_DIR$/new-homepage.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,24 +42,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
-    "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "/Users/alban/Desktop/syntacticops/repos/reservebar-ecom/ralph-lauren/assets/imgs",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "/Applications/WebStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/alban/Desktop/syntacticops/repos/reservebar-ecom/ralph-lauren/assets/imgs&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Applications/WebStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/assets/imgs" />
@@ -90,7 +90,8 @@
       <workItem from="1758117406209" duration="2000" />
       <workItem from="1758118446283" duration="3947000" />
       <workItem from="1758199977489" duration="1541000" />
-      <workItem from="1758305335314" duration="1531000" />
+      <workItem from="1758305335314" duration="2203000" />
+      <workItem from="1758800697089" duration="570000" />
     </task>
     <task id="LOCAL-00001" summary="fix(elements): update URL for elements SDK">
       <option name="closed" value="true" />
@@ -116,7 +117,15 @@
       <option name="project" value="LOCAL" />
       <updated>1758201297294</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="fix(workspace): update recent file paths and task summaries in workspace configuration">
+      <option name="closed" value="true" />
+      <created>1758309034036</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1758309034036</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -126,6 +135,7 @@
     <MESSAGE value="fix(elements): update URL for elements SDK" />
     <MESSAGE value="feat(homepage): add new homepage design with SEO optimizations and product sections" />
     <MESSAGE value="fix(new-hp): move to prod and update product upcs and description" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix(new-hp): move to prod and update product upcs and description" />
+    <MESSAGE value="fix(workspace): update recent file paths and task summaries in workspace configuration" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix(workspace): update recent file paths and task summaries in workspace configuration" />
   </component>
 </project>
