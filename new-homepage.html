@@ -171,62 +171,62 @@
       </div>
     </footer>
 
-    <script type="text/javascript" src="https://assets-elements.liquidcommerce.us/all/beta/elements.js"></script>
-    
+    <script type="text/javascript" src="https://assets-elements.liquidcommerce.us/rahl/all/beta/elements.js"></script>
+
     <script>
       document.addEventListener("DOMContentLoaded", async () => {
         const products = [
           {
             name: "Woodford Reserve Double Oaked Kentucky Bourbon Whiskey",
-            upc: "00081128001209",
+            identifier: "GROUPING-2534779",
             image: "GROUPING-2534779",
             description: "Woodford Reserve Double Oaked Kentucky Straight Bourbon Whiskey is an innovative approach to twice-barreled bourbon, that showcases a rich and colorful flavor unlike any other Kentucky bourbon on the market."
           },
           {
             name: "Acqua Panna Flat Water",
-            upc: "GROUPING-2347346",
+            identifier: "GROUPING-2347346",
             image: "GROUPING-2347346",
             description: "Naturally crafted by the Tuscan landscape and bottles at the source, Acqua Panna Natural Spring Water is renowned for it’s unique taste."
           },
           {
             name: "Pellegrino Sparkling Mineral Water",
-            upc: "GROUPING-2347347",
+            identifier: "GROUPING-2347347",
             image: "GROUPING-2347347",
             description: "The water's pleasing effervescence, its subtle pearly reflections, and its thirst-quenching taste have made it famous the world over."
           },
           {
             name: "Coca-Cola",
-            upc: "GROUPING-2347344",
+            identifier: "GROUPING-2347344",
             image: "GROUPING-2347344",
             description: "Coca-Cola Original Taste — the refreshing, crisp taste you know and love. Great taste since 1886."
           },
           {
             name: "Diet Coca-Cola",
-            upc: "GROUPING-2347391",
+            identifier: "GROUPING-2347391",
             image: "GROUPING-2347391",
             description: "Get the great taste of Coca-Cola without all the calories."
           },
           {
             name: "Moët & Chandon Imperial Brut Champagne",
-            upc: "GROUPING-2347348",
+            identifier: "GROUPING-2347348",
             image: "GROUPING-2347348",
             description: "Moët Impérial is the House’s iconic champagne. Created in 1869, it embodies the unique Moët & Chandon style. A style that distinguishes itself by its bright fruitiness, its seductive palate and its elegant maturity."
           },
           {
             name: "Schwepps Ginger Ale",
-            upc: "GROUPING-2347345",
+            identifier: "GROUPING-2347345",
             image: "GROUPING-2347345",
             description: "Ginger Flavor: Schweppes Ginger Ale has a refreshing ginger flavor that provides a zesty taste experience."
           },
           {
             name: "New Belgium Fat Tire Amber Ale",
-            upc: "GROUPING-2500074",
+            identifier: "GROUPING-2500074",
             image: "GROUPING-2500074",
             description: "Fat Tire Amber is the easy-drinking Amber Ale born in Colorado from New Belgium Brewing Company, a certified B-Corp."
           },
           {
             name: "Stella Artois",
-            upc: "GROUPING-2500075",
+            identifier: "GROUPING-2500075",
             image: "GROUPING-2500075",
             description: "Stella Artois' rich brewing history dates back to 1366 in Leuven, Belgium, and was first brewed to celebrate the holiday season. Stella is made with its superior brewing process and uses only the best ingredients."
           },
@@ -261,7 +261,7 @@
                   ${product.description}
                 </p>
               </div>
-              <div id="content-${product.upc}" class="min-h-[300px]"></div>
+              <div id="content-${product.identifier}" class="min-h-[300px]"></div>
             </div>
           `;
           
@@ -277,7 +277,12 @@
           document.querySelector("#products").appendChild(wrapper);
         });
 
-        // Initialize Elements v2
+        // Listen for the client ready event
+        window.addEventListener('lce:actions.client_ready', ({ detail: { data } }) => {
+          console.log("Liquid Commerce Elements", data);
+        });
+
+        // Initialize Elements
         const API_KEY = "U2FsdGVkX190TL16w4qpkeLOFZS58SG/x65mllH2UT1WFVMAAjdoX+qy9yVzd3xROfATb5NoXz75QwJOecFawzxZcy8BnS5HcNWQM2dZWshXKEuqFMznClUt2HfBnTLXgm9hqKrsTLyCCOCjic2OD/aP+uSBKosqu6lHS62KbTHGnE74i9CDKp/MzoYWLnBNF/zvm6JCyoQ08nlK6B3LLeFdYdmIbOeirq733yw/uzjR9d+Y8kMSGw815wB+nvrtMkQtdFRdu3LWbIzizlEhDQ==";
 
         const client = await window.Elements(API_KEY, {
@@ -294,8 +299,8 @@
         });
 
         const normalizedProductIdentifiers = products.map(p => ({
-          containerId: `content-${p.upc}`,
-          identifier: p.upc
+          containerId: `content-${p.identifier}`,
+          identifier: p.identifier
         }));
 
         await client.injectProductElement(normalizedProductIdentifiers);
