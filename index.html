@@ -171,6 +171,7 @@
       </div>
     </footer>
 
+    <script type="text/javascript" src="https://storage.googleapis.com/liquid-commerse-assets/sdk/cloud/liquidcommerce-cloud-sdk.min.js"></script>
     <script type="text/javascript" src="https://elements.reservebar-worker.workers.dev/rahl/all/elements.js"></script>
 
     <script>
@@ -178,8 +179,8 @@
         const products = [
           {
             name: "Woodford Reserve Double Oaked Kentucky Bourbon Whiskey",
-            identifier: "GROUPING-2534779",
-            image: "GROUPING-2534779",
+            identifier: "GROUPING-1771674",
+            image: "GROUPING-1771674",
             description: "Woodford Reserve Double Oaked Kentucky Straight Bourbon Whiskey is an innovative approach to twice-barreled bourbon, that showcases a rich and colorful flavor unlike any other Kentucky bourbon on the market."
           },
           {
@@ -283,10 +284,12 @@
         });
 
         // Initialize Elements
-        const API_KEY = "pk_92f397cf72213c9b17304f7a_ecd6b226d1e83138a8a1a75f078f5a4179a690e5b7827cf2a346fe3ef6234302";
+        const ELEMENTS_API_KEY = "pk_964ceb9cc9e753fdba1cb4b9_f983534d1ca4e14ea50554bd56bb98db253488a960d6c350e01d923a813feb5c";
+        const TEST_USER_EMAIL = "work.axh@gmail.com";
+        const CLOUD_API_KEY = "e71df2ac1edf89c83095dcfd100115aa6a1ad1efd922e4e70e919a12";
 
-        const client = await window.LiquidCommerce.Elements(API_KEY, {
-          env: "production",
+        const client = await window.LiquidCommerce.Elements(ELEMENTS_API_KEY, {
+          env: "development",
           customTheme: {
             product: {
               layout: {
@@ -297,6 +300,36 @@
             }
           }
         });
+
+        try {
+          const cloud = await window.LiquidCommerce(CLOUD_API_KEY, {
+            env: "dev",
+            googlePlacesApiKey: ""
+          });
+
+          const userResponse = await cloud.user.session({ email: TEST_USER_EMAIL });
+          const savedPayments = userResponse?.data?.savedPayments || [];
+          const chosenPayment = savedPayments.find(p => p.isDefault) || savedPayments[0];
+          console.log({ chosenPayment });
+
+          if (chosenPayment && chosenPayment.id) {
+            client.actions.checkout.setSavedPaymentMethod({
+              id: chosenPayment.id,
+              card: {
+                brand: chosenPayment.card?.brand,
+                last4: chosenPayment.card?.last4,
+                expMonth: chosenPayment.card?.expMonth,
+                expYear: chosenPayment.card?.expYear
+              }
+            });
+            console.log("[RL] Pre-selected saved card:", chosenPayment.card?.brand, "ending in", chosenPayment.card?.last4);
+          } else {
+            console.log("[RL] No saved payment methods for", TEST_USER_EMAIL, "— falling back to card entry.");
+          }
+        } catch (savedPaymentError) {
+          // Non-fatal: if the lookup fails, checkout still works with normal card entry.
+          console.warn("[RL] Saved-payment pre-fill skipped:", savedPaymentError);
+        }
 
         const normalizedProductIdentifiers = products.map(p => ({
           containerId: `content-${p.identifier}`,
