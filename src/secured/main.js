@@ -1,6 +1,18 @@
 const ELEMENTS_API_ENV = "production";
 const ELEMENTS_API_KEY = "pk_92f397cf72213c9b17304f7a_ecd6b226d1e83138a8a1a75f078f5a4179a690e5b7827cf2a346fe3ef6234302";
 
+const CLOUD_API_ENV = "prod";
+const CLOUD_API_KEY = "712ef221200c9fe21e13ddd9f6a60dfe5823cf7d9f22570a15289aa6";
+
+const USER_EMAIL = "ralphlauren@liquidapp.co";
+
+const ELEMENTS_SERVICES_BASE = {
+  development: "https://elements-services-development-948630220003.us-central1.run.app",
+  staging: "https://elements-services-staging-948630220003.us-central1.run.app",
+  production: "https://elements-services-production-948630220003.us-central1.run.app",
+};
+const ELEMENTS_SERVICES_BASE_URL = ELEMENTS_SERVICES_BASE[ELEMENTS_API_ENV];
+
 const PRODUCTS = [
   {
     name: "Woodford Reserve Double Oaked Kentucky Bourbon Whiskey",
@@ -58,6 +70,68 @@ const PRODUCTS = [
   },
 ];
 
+async function verifyRlUser(password) {
+  try {
+    const res = await fetch(`${ELEMENTS_SERVICES_BASE_URL}/api/other/verify-rl-user`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key: password }),
+    });
+    if (!res.ok) return false;
+    const data = await res.json().catch(() => null);
+    return data?.valid === true;
+  } catch (err) {
+    console.warn("[RL] Password verification failed:", err);
+    return false;
+  }
+}
+
+function requestPassword(verify) {
+  return new Promise((resolve) => {
+    const overlay = document.createElement("div");
+    overlay.id = "rl-auth-overlay";
+    overlay.innerHTML = `
+      <div id="rl-auth-card" role="dialog" aria-modal="true" aria-labelledby="rl-auth-title">
+        <div class="rl-auth-brand">
+          <span style="color:#041e3a">Ralph Lauren</span><span style="color:#6b7280">x</span><span style="color:#8B4513">ReserveBar</span>
+        </div>
+        <h2 id="rl-auth-title">Enter password</h2>
+        <p>This page is password protected. Please enter the password to continue.</p>
+        <form id="rl-auth-form" novalidate>
+          <input id="rl-auth-input" type="password" autocomplete="current-password" placeholder="Password" aria-label="Password" />
+          <div id="rl-auth-error">Incorrect password. Please try again.</div>
+          <button id="rl-auth-submit" type="submit">Unlock</button>
+        </form>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    requestAnimationFrame(() => overlay.classList.add("rl-visible"));
+
+    const input = overlay.querySelector("#rl-auth-input");
+    const error = overlay.querySelector("#rl-auth-error");
+    const form = overlay.querySelector("#rl-auth-form");
+    const submit = overlay.querySelector("#rl-auth-submit");
+    input.focus();
+
+    input.addEventListener("input", () => error.classList.remove("rl-show"));
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      submit.disabled = true;
+      const ok = await verify(input.value);
+      submit.disabled = false;
+      if (!ok) {
+        error.classList.add("rl-show");
+        input.select();
+        return;
+      }
+      overlay.classList.remove("rl-visible");
+      setTimeout(() => overlay.remove(), 200);
+      resolve();
+    });
+  });
+}
+
 function renderProductCards(products) {
   const container = document.querySelector("#products");
 
@@ -69,7 +143,7 @@ function renderProductCards(products) {
       <div class="flex justify-center ${isEven ? 'lg:order-1' : 'lg:order-2'}">
         <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100 max-w-md">
           <img
-            src="assets/imgs/${product.image}.png"
+            src="/assets/imgs/${product.image}.png"
             alt="${product.name}"
             class="w-full h-auto object-contain max-h-[400px]"
           />
@@ -151,11 +225,57 @@ async function initElements(products) {
   return client;
 }
 
+async function prefillSavedPayment(client) {
+  window.addEventListener("lce:actions.checkout_loaded", () => {
+    client.actions.checkout.toggleBillingSameAsShipping(false);
+
+    client.actions.checkout.updateBillingInfo({
+      firstName: "Kate",
+      lastName: "Zaman",
+      email: USER_EMAIL,
+      phone: "(855) 443-8144",
+      company: "Ralph Lauren",
+      addressOne: "110 CHARLTON ST",
+      addressTwo: "# 19H",
+      city: "NEW YORK",
+      state: "NY",
+      zipCode: "10014"
+    });
+  });
+
+  try {
+    const cloud = await window.LiquidCommerce(CLOUD_API_KEY, {
+      env: CLOUD_API_ENV,
+      googlePlacesApiKey: ""
+    });
+
+    const userResponse = await cloud.user.session({ email: USER_EMAIL });
+    const savedPayments = userResponse?.data?.savedPayments || [];
+    const chosenPayment = savedPayments.find(p => p.isDefault) || savedPayments[0];
+
+    if (chosenPayment && chosenPayment.id) {
+      client.actions.checkout.setSavedPaymentMethod({
+        id: chosenPayment.id,
+        card: {
+          brand: chosenPayment.card?.brand,
+          last4: chosenPayment.card?.last4,
+          expMonth: chosenPayment.card?.expMonth,
+          expYear: chosenPayment.card?.expYear
+        }
+      });
+    }
+  } catch (savedPaymentError) {
+    console.warn("[RL] Saved-payment pre-fill skipped:", savedPaymentError);
+  }
+}
+
 // ===========================================================================
 // Bootstrap
 // ===========================================================================
 
 document.addEventListener("DOMContentLoaded", async () => {
+  await requestPassword(verifyRlUser);
   renderProductCards(PRODUCTS);
-  await initElements(PRODUCTS);
+  const client = await initElements(PRODUCTS);
+  await prefillSavedPayment(client);
 });

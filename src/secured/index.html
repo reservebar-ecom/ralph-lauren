@@ -10,13 +10,13 @@
     <meta name="keywords" content="Ralph Lauren, ReserveBar, premium spirits, luxury beverages, whiskey, champagne, craft beer, alcohol delivery, fine spirits, curated collection" />
     <meta name="author" content="Ralph Lauren x ReserveBar" />
     <meta name="robots" content="noindex, nofollow" />
-    <link rel="canonical" href="https://ralphlauren.reservebar.com/" />
+    <link rel="canonical" href="https://ralphlauren.reservebar.com/secured/" />
     
     <!-- Open Graph Meta Tags (Facebook, LinkedIn) -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Ralph Lauren x ReserveBar - Premium Spirits Collection" />
     <meta property="og:description" content="Discover our exclusive collection of premium spirits and beverages. Curated excellence with good spirits delivered to your door." />
-    <meta property="og:url" content="https://ralphlauren.reservebar.com/" />
+    <meta property="og:url" content="https://ralphlauren.reservebar.com/secured/" />
     <meta property="og:site_name" content="Ralph Lauren x ReserveBar" />
     <meta property="og:image" content="https://ralphlauren.reservebar.com/assets/imgs/og-image.jpg" />
     <meta property="og:image:alt" content="Ralph Lauren x ReserveBar Premium Spirits Collection" />
@@ -46,6 +46,92 @@
     <link rel="dns-prefetch" href="https://elements.reservebar-worker.workers.dev" />
     
     <link href="/styles/main.css" rel="stylesheet" />
+
+    <!-- Password gate (site access) -->
+    <style>
+      #rl-auth-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        background: rgba(4, 30, 58, 0.55);
+        -webkit-backdrop-filter: blur(4px);
+        backdrop-filter: blur(4px);
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+      #rl-auth-overlay.rl-visible { opacity: 1; }
+      #rl-auth-card {
+        width: 100%;
+        max-width: 26rem;
+        background: #fff;
+        border-radius: 0.75rem;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+        padding: 2rem;
+        text-align: center;
+        transform: translateY(8px);
+        transition: transform 0.2s ease;
+        font-family: inherit;
+      }
+      #rl-auth-overlay.rl-visible #rl-auth-card { transform: translateY(0); }
+      .rl-auth-brand {
+        font-weight: 700;
+        font-size: 1.25rem;
+        margin-bottom: 1.25rem;
+      }
+      .rl-auth-brand span { margin: 0 0.15rem; }
+      #rl-auth-card h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #041e3a;
+        margin: 0 0 0.5rem;
+      }
+      #rl-auth-card p {
+        font-size: 0.9rem;
+        color: #4b5563;
+        line-height: 1.5;
+        margin: 0 0 1.5rem;
+      }
+      #rl-auth-input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+        outline: none;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      }
+      #rl-auth-input:focus {
+        border-color: #041e3a;
+        box-shadow: 0 0 0 3px rgba(4, 30, 58, 0.12);
+      }
+      #rl-auth-error {
+        display: none;
+        color: #b91c1c;
+        font-size: 0.8rem;
+        text-align: left;
+        margin-top: 0.4rem;
+      }
+      #rl-auth-error.rl-show { display: block; }
+      #rl-auth-submit {
+        width: 100%;
+        margin-top: 1rem;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #fff;
+        background: #041e3a;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: background 0.15s ease;
+      }
+      #rl-auth-submit:hover { background: #08294d; }
+    </style>
   </head>
   <body class="bg-white text-gray-900 font-foundersGrotesk">
     <!-- Header -->
@@ -173,6 +259,6 @@
 
     <script type="text/javascript" src="https://storage.googleapis.com/liquid-commerse-assets/sdk/cloud/liquidcommerce-cloud-sdk.min.js"></script>
     <script type="text/javascript" src="https://elements.reservebar-worker.workers.dev/rahl/all/elements.js"></script>
-    <script type="module" src="/main.js"></script>
+    <script type="module" src="/secured/main.js"></script>
   </body>
 </html>
