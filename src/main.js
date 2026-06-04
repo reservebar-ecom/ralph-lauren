@@ -246,6 +246,23 @@ async function prefillSavedPayment(client) {
           expYear: chosenPayment.card?.expYear
         }
       });
+
+      window.addEventListener("lce:actions.checkout_loaded", () => {
+        client.actions.checkout.toggleBillingSameAsShipping(false);
+
+        client.actions.checkout.updateBillingInfo({
+          firstName: "Kate",
+          lastName: "Zaman",
+          email: USER_EMAIL,
+          phone: "(855) 443-8144",
+          company: "Ralph Lauren",
+          addressOne: "110 CHARLTON ST",
+          addressTwo: "# 19H",
+          city: "NEW YORK",
+          state: "NY",
+          zipCode: "10014"
+        });
+      });
     } else {
       console.log("[RL] No saved payment methods found — falling back to card entry.");
     }
