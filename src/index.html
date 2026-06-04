@@ -45,7 +45,93 @@
     <link rel="preconnect" href="https://elements.reservebar-worker.workers.dev" />
     <link rel="dns-prefetch" href="https://elements.reservebar-worker.workers.dev" />
     
-    <link href="./index.css" rel="stylesheet" />
+    <link href="/styles/main.css" rel="stylesheet" />
+
+    <!-- Password gate (site access) -->
+    <style>
+      #rl-auth-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        background: rgba(4, 30, 58, 0.55);
+        -webkit-backdrop-filter: blur(4px);
+        backdrop-filter: blur(4px);
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+      #rl-auth-overlay.rl-visible { opacity: 1; }
+      #rl-auth-card {
+        width: 100%;
+        max-width: 26rem;
+        background: #fff;
+        border-radius: 0.75rem;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+        padding: 2rem;
+        text-align: center;
+        transform: translateY(8px);
+        transition: transform 0.2s ease;
+        font-family: inherit;
+      }
+      #rl-auth-overlay.rl-visible #rl-auth-card { transform: translateY(0); }
+      .rl-auth-brand {
+        font-weight: 700;
+        font-size: 1.25rem;
+        margin-bottom: 1.25rem;
+      }
+      .rl-auth-brand span { margin: 0 0.15rem; }
+      #rl-auth-card h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #041e3a;
+        margin: 0 0 0.5rem;
+      }
+      #rl-auth-card p {
+        font-size: 0.9rem;
+        color: #4b5563;
+        line-height: 1.5;
+        margin: 0 0 1.5rem;
+      }
+      #rl-auth-input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+        outline: none;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      }
+      #rl-auth-input:focus {
+        border-color: #041e3a;
+        box-shadow: 0 0 0 3px rgba(4, 30, 58, 0.12);
+      }
+      #rl-auth-error {
+        display: none;
+        color: #b91c1c;
+        font-size: 0.8rem;
+        text-align: left;
+        margin-top: 0.4rem;
+      }
+      #rl-auth-error.rl-show { display: block; }
+      #rl-auth-submit {
+        width: 100%;
+        margin-top: 1rem;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #fff;
+        background: #041e3a;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: background 0.15s ease;
+      }
+      #rl-auth-submit:hover { background: #08294d; }
+    </style>
   </head>
   <body class="bg-white text-gray-900 font-foundersGrotesk">
     <!-- Header -->
@@ -173,188 +259,6 @@
 
     <script type="text/javascript" src="https://storage.googleapis.com/liquid-commerse-assets/sdk/cloud/liquidcommerce-cloud-sdk.min.js"></script>
     <script type="text/javascript" src="https://elements.reservebar-worker.workers.dev/rahl/all/elements.js"></script>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", async () => {
-        const products = [
-          {
-            name: "Woodford Reserve Double Oaked Kentucky Bourbon Whiskey",
-            identifier: "GROUPING-1771674",
-            image: "GROUPING-1771674",
-            description: "Woodford Reserve Double Oaked Kentucky Straight Bourbon Whiskey is an innovative approach to twice-barreled bourbon, that showcases a rich and colorful flavor unlike any other Kentucky bourbon on the market."
-          },
-          {
-            name: "Acqua Panna Flat Water",
-            identifier: "GROUPING-2347346",
-            image: "GROUPING-2347346",
-            description: "Naturally crafted by the Tuscan landscape and bottles at the source, Acqua Panna Natural Spring Water is renowned for it’s unique taste."
-          },
-          {
-            name: "Pellegrino Sparkling Mineral Water",
-            identifier: "GROUPING-2347347",
-            image: "GROUPING-2347347",
-            description: "The water's pleasing effervescence, its subtle pearly reflections, and its thirst-quenching taste have made it famous the world over."
-          },
-          {
-            name: "Coca-Cola",
-            identifier: "GROUPING-2347344",
-            image: "GROUPING-2347344",
-            description: "Coca-Cola Original Taste — the refreshing, crisp taste you know and love. Great taste since 1886."
-          },
-          {
-            name: "Diet Coca-Cola",
-            identifier: "GROUPING-2347391",
-            image: "GROUPING-2347391",
-            description: "Get the great taste of Coca-Cola without all the calories."
-          },
-          {
-            name: "Moët & Chandon Imperial Brut Champagne",
-            identifier: "GROUPING-2347348",
-            image: "GROUPING-2347348",
-            description: "Moët Impérial is the House’s iconic champagne. Created in 1869, it embodies the unique Moët & Chandon style. A style that distinguishes itself by its bright fruitiness, its seductive palate and its elegant maturity."
-          },
-          {
-            name: "Schwepps Ginger Ale",
-            identifier: "GROUPING-2347345",
-            image: "GROUPING-2347345",
-            description: "Ginger Flavor: Schweppes Ginger Ale has a refreshing ginger flavor that provides a zesty taste experience."
-          },
-          {
-            name: "New Belgium Fat Tire Amber Ale",
-            identifier: "GROUPING-2500074",
-            image: "GROUPING-2500074",
-            description: "Fat Tire Amber is the easy-drinking Amber Ale born in Colorado from New Belgium Brewing Company, a certified B-Corp."
-          },
-          {
-            name: "Stella Artois",
-            identifier: "GROUPING-2500075",
-            image: "GROUPING-2500075",
-            description: "Stella Artois' rich brewing history dates back to 1366 in Leuven, Belgium, and was first brewed to celebrate the holiday season. Stella is made with its superior brewing process and uses only the best ingredients."
-          },
-        ];
-
-        // Create product cards in demo site style
-        products.forEach((product, index) => {
-          const isEven = index % 2 === 0;
-          const productCard = document.createElement("div");
-          const bgColor = isEven ? "bg-white" : "bg-gray-50";
-          productCard.className = `grid grid-cols-1 lg:grid-cols-2 gap-12 items-start py-20 px-8 w-full ${bgColor}`;
-          
-          const imageSection = `
-            <div class="flex justify-center ${isEven ? 'lg:order-1' : 'lg:order-2'}">
-              <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100 max-w-md">
-                <img 
-                  src="assets/imgs/${product.image}.png" 
-                  alt="${product.name}"
-                  class="w-full h-auto object-contain max-h-[400px]"
-                />
-              </div>
-            </div>
-          `;
-          
-          const productSection = `
-            <div class="flex flex-col justify-start ${isEven ? 'lg:order-2' : 'lg:order-1'} space-y-6">
-              <div class="space-y-4">
-                <h2 class="text-2xl md:text-3xl font-light text-gray-900 leading-tight">
-                  ${product.name}
-                </h2>
-                <p class="text-sm text-gray-600 leading-relaxed">
-                  ${product.description}
-                </p>
-              </div>
-              <div id="content-${product.identifier}" class="min-h-[300px]"></div>
-            </div>
-          `;
-          
-          const wrapper = document.createElement("div");
-          wrapper.className = `w-full ${bgColor}`;
-          wrapper.innerHTML = `
-            <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-start py-20 px-8">
-              ${imageSection}
-              ${productSection}
-            </div>
-          `;
-          
-          document.querySelector("#products").appendChild(wrapper);
-        });
-
-        // Listen for the client ready event
-        window.addEventListener('lce:actions.client_ready', ({ detail: { data } }) => {
-          console.log("Liquid Commerce Elements", data);
-        });
-
-        // Initialize Elements
-        const ELEMENTS_API_KEY = "pk_964ceb9cc9e753fdba1cb4b9_f983534d1ca4e14ea50554bd56bb98db253488a960d6c350e01d923a813feb5c";
-        const TEST_USER_EMAIL = "work.axh@gmail.com";
-        const CLOUD_API_KEY = "e71df2ac1edf89c83095dcfd100115aa6a1ad1efd922e4e70e919a12";
-
-        const client = await window.LiquidCommerce.Elements(ELEMENTS_API_KEY, {
-          env: "development",
-          customTheme: {
-            product: {
-              layout: {
-                showTitle: false,
-                showImages: false,
-                showDescription: false
-              }
-            }
-          }
-        });
-
-        try {
-          const cloud = await window.LiquidCommerce(CLOUD_API_KEY, {
-            env: "dev",
-            googlePlacesApiKey: ""
-          });
-
-          const userResponse = await cloud.user.session({ email: TEST_USER_EMAIL });
-          const savedPayments = userResponse?.data?.savedPayments || [];
-          const chosenPayment = savedPayments.find(p => p.isDefault) || savedPayments[0];
-          console.log({ chosenPayment });
-
-          if (chosenPayment && chosenPayment.id) {
-            client.actions.checkout.setSavedPaymentMethod({
-              id: chosenPayment.id,
-              card: {
-                brand: chosenPayment.card?.brand,
-                last4: chosenPayment.card?.last4,
-                expMonth: chosenPayment.card?.expMonth,
-                expYear: chosenPayment.card?.expYear
-              }
-            });
-            console.log("[RL] Pre-selected saved card:", chosenPayment.card?.brand, "ending in", chosenPayment.card?.last4);
-          } else {
-            console.log("[RL] No saved payment methods for", TEST_USER_EMAIL, "— falling back to card entry.");
-          }
-        } catch (savedPaymentError) {
-          // Non-fatal: if the lookup fails, checkout still works with normal card entry.
-          console.warn("[RL] Saved-payment pre-fill skipped:", savedPaymentError);
-        }
-
-        const normalizedProductIdentifiers = products.map(p => ({
-          containerId: `content-${p.identifier}`,
-          identifier: p.identifier
-        }));
-
-        await client.injectProductElement(normalizedProductIdentifiers);
-
-        // Inject address elements for both desktop and mobile
-        await client.injectAddressElement("address-placeholder", { showLabel: true });
-        await client.injectAddressElement("address-placeholder-mobile", { showLabel: true });
-
-        // Setup cart item count for both desktop and mobile
-        await client.ui.cartItemsCount("cart-badge-items");
-        await client.ui.cartItemsCount("cart-badge-items-mobile");
-
-        // Setup cart click handlers for both desktop and mobile
-        document.querySelector("#cart-open-button-demo").addEventListener("click", () => {
-            client.actions.cart.openCart();
-        });
-        
-        document.querySelector("#cart-open-button-demo-mobile").addEventListener("click", () => {
-            client.actions.cart.openCart();
-        });
-      });
-    </script>
+    <script type="module" src="/main.js"></script>
   </body>
 </html>
