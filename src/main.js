@@ -1,10 +1,10 @@
-const ELEMENTS_API_ENV = "development";
-const ELEMENTS_API_KEY = "pk_964ceb9cc9e753fdba1cb4b9_f983534d1ca4e14ea50554bd56bb98db253488a960d6c350e01d923a813feb5c";
+const ELEMENTS_API_ENV = "production";
+const ELEMENTS_API_KEY = "pk_92f397cf72213c9b17304f7a_ecd6b226d1e83138a8a1a75f078f5a4179a690e5b7827cf2a346fe3ef6234302";
 
-const CLOUD_API_ENV = "dev";
-const CLOUD_API_KEY = "e71df2ac1edf89c83095dcfd100115aa6a1ad1efd922e4e70e919a12";
+const CLOUD_API_ENV = "prod";
+const CLOUD_API_KEY = "712ef221200c9fe21e13ddd9f6a60dfe5823cf7d9f22570a15289aa6";
 
-const USER_EMAIL = "work.axh@gmail.com";
+const USER_EMAIL = "ralphlauren@liquidapp.co";
 
 const ELEMENTS_SERVICES_BASE = {
   development: "https://elements-services-development-948630220003.us-central1.run.app",
