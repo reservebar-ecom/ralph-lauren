@@ -1,16 +1,21 @@
 {
   "name": "ralph-lauren",
   "version": "1.0.0",
-  "description": "ralph lauren - ReserveBar",
-  "main": "index.js",
+  "description": "Ralph Lauren x ReserveBar",
+  "main": "src/main.js",
   "scripts": {
-    "start": "concurrently \"npx tailwindcss -i ./main.css -o ./index.css --watch\" \"npx five-server\""
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2",
-    "live-server": "^1.2.0",
-    "open": "^10.1.0",
-    "tailwindcss": "^3.4.3"
+    "autoprefixer": "^10.5.0",
+    "postcss": "^8.5.15",
+    "tailwindcss": "3.4.3",
+    "vite": "^8.0.16"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild"]
   },
   "repository": {
     "type": "git",
