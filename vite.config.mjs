@@ -1,10 +1,23 @@
 import { defineConfig } from "vite";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { existsSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 
 const root = dirname(fileURLToPath(import.meta.url));
 const srcDir = resolve(root, "src");
+
+// Auto-discover every page: each src/**/index.html is its own MPA entry.
+// Add a new page by dropping in src/<name>/index.html — no config change needed.
+// Keys: the root index.html is "main"; src/faq/index.html is "faq", etc.
+const pages = Object.fromEntries(
+  readdirSync(srcDir, { recursive: true })
+    .filter((file) => file.endsWith("index.html"))
+    .map((file) => {
+      const dir = dirname(file);
+      const name = dir === "." ? "main" : dir.replaceAll("/", "-");
+      return [name, resolve(srcDir, file)];
+    }),
+);
 
 // Dev-only: mirror GitHub Pages behavior by redirecting an extensionless path
 // like /faq to /faq/ when src/faq/index.html exists. (In production, Pages does
@@ -48,11 +61,7 @@ export default defineConfig({
     outDir: resolve(root, "dist"),
     emptyOutDir: true,
     rollupOptions: {
-      input: {
-        main: resolve(srcDir, "index.html"),
-        faq: resolve(srcDir, "faq/index.html"),
-        oldHome: resolve(srcDir, "old-homepage.html"),
-      },
+      input: pages,
     },
   },
 });
