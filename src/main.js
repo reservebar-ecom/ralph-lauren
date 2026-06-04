@@ -226,7 +226,7 @@ async function initElements(products) {
 }
 
 async function prefillSavedPayment(client) {
-  const applyBilling = () => {
+  window.addEventListener("lce:actions.checkout_loaded", () => {
     client.actions.checkout.toggleBillingSameAsShipping(false);
 
     client.actions.checkout.updateBillingInfo({
@@ -241,10 +241,7 @@ async function prefillSavedPayment(client) {
       state: "NY",
       zipCode: "10014"
     });
-  };
-
-  window.addEventListener("lce:actions.checkout_loaded", applyBilling);
-  applyBilling();
+  });
 
   try {
     const cloud = await window.LiquidCommerce(CLOUD_API_KEY, {
@@ -266,8 +263,6 @@ async function prefillSavedPayment(client) {
           expYear: chosenPayment.card?.expYear
         }
       });
-    } else {
-      console.log("[RL] No saved payment methods found — falling back to card entry.");
     }
   } catch (savedPaymentError) {
     console.warn("[RL] Saved-payment pre-fill skipped:", savedPaymentError);
