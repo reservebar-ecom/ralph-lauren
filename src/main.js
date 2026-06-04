@@ -226,6 +226,26 @@ async function initElements(products) {
 }
 
 async function prefillSavedPayment(client) {
+  const applyBilling = () => {
+    client.actions.checkout.toggleBillingSameAsShipping(false);
+
+    client.actions.checkout.updateBillingInfo({
+      firstName: "Kate",
+      lastName: "Zaman",
+      email: USER_EMAIL,
+      phone: "(855) 443-8144",
+      company: "Ralph Lauren",
+      addressOne: "110 CHARLTON ST",
+      addressTwo: "# 19H",
+      city: "NEW YORK",
+      state: "NY",
+      zipCode: "10014"
+    });
+  };
+
+  window.addEventListener("lce:actions.checkout_loaded", applyBilling);
+  applyBilling();
+
   try {
     const cloud = await window.LiquidCommerce(CLOUD_API_KEY, {
       env: CLOUD_API_ENV,
@@ -245,23 +265,6 @@ async function prefillSavedPayment(client) {
           expMonth: chosenPayment.card?.expMonth,
           expYear: chosenPayment.card?.expYear
         }
-      });
-
-      window.addEventListener("lce:actions.checkout_loaded", () => {
-        client.actions.checkout.toggleBillingSameAsShipping(false);
-
-        client.actions.checkout.updateBillingInfo({
-          firstName: "Kate",
-          lastName: "Zaman",
-          email: USER_EMAIL,
-          phone: "(855) 443-8144",
-          company: "Ralph Lauren",
-          addressOne: "110 CHARLTON ST",
-          addressTwo: "# 19H",
-          city: "NEW YORK",
-          state: "NY",
-          zipCode: "10014"
-        });
       });
     } else {
       console.log("[RL] No saved payment methods found — falling back to card entry.");
