@@ -95,7 +95,7 @@
         line-height: 1.5;
         margin: 0 0 1.5rem;
       }
-      #rl-auth-input {
+      #rl-auth-card input {
         width: 100%;
         box-sizing: border-box;
         padding: 0.75rem 1rem;
@@ -105,7 +105,8 @@
         outline: none;
         transition: border-color 0.15s ease, box-shadow 0.15s ease;
       }
-      #rl-auth-input:focus {
+      #rl-auth-card input + input { margin-top: 0.6rem; }
+      #rl-auth-card input:focus {
         border-color: #041e3a;
         box-shadow: 0 0 0 3px rgba(4, 30, 58, 0.12);
       }

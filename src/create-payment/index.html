@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Ralph Lauren x ReserveBar — Create shopper &amp; save card</title>
+    <style>
+      :root {
+        --bg: #f5f6f8;
+        --card: #ffffff;
+        --border: #e3e6ea;
+        --text: #041e3a;
+        --muted: #6b7280;
+        --primary: #041e3a;
+        --primary-press: #08294d;
+        --accent: #8b4513;
+        --ok: #18a957;
+        --radius: 12px;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+        font-size: 14px;
+        line-height: 1.45;
+      }
+      .wrap { max-width: 520px; margin: 40px auto; padding: 0 16px; }
+      .brand {
+        text-align: center; font-weight: 700; font-size: 18px; margin-bottom: 6px;
+      }
+      .brand .x { color: var(--muted); margin: 0 .3rem; }
+      .brand .rb { color: var(--accent); }
+      header .sub { color: var(--muted); text-align: center; margin: 0 0 24px; }
+
+      .steps { list-style: none; display: flex; gap: 8px; padding: 0; margin: 0 0 20px; }
+      .steps li {
+        flex: 1; display: flex; align-items: center; gap: 8px;
+        font-size: 12px; color: var(--muted); font-weight: 600;
+      }
+      .steps li .dot {
+        width: 22px; height: 22px; border-radius: 50%; flex: none;
+        display: grid; place-items: center; font-size: 12px; background: #d3d7dd; color: #fff;
+      }
+      .steps li[data-state="active"] { color: var(--text); }
+      .steps li[data-state="active"] .dot { background: var(--primary); }
+      .steps li[data-state="done"] .dot { background: var(--ok); }
+      .steps li[data-state="done"] .dot::after { content: "✓"; }
+      .steps li[data-state="done"] .dot span { display: none; }
+
+      .card {
+        background: var(--card); border: 1px solid var(--border);
+        border-radius: var(--radius); margin-bottom: 14px; overflow: hidden;
+        transition: opacity .15s ease;
+      }
+      .card-head { display: flex; align-items: center; gap: 10px; padding: 16px 18px; }
+      .card-head .badge {
+        width: 24px; height: 24px; border-radius: 50%; flex: none;
+        display: grid; place-items: center; font-size: 12px; font-weight: 700;
+        background: var(--primary); color: #fff;
+      }
+      .card-head h2 { font-size: 15px; margin: 0; }
+      .card-body { padding: 0 18px 18px; }
+      .card[data-state="locked"] { opacity: .5; }
+      .card[data-state="locked"] .card-body,
+      .card[data-state="locked"] .card-summary,
+      .card[data-state="active"] .card-summary,
+      .card[data-state="done"] .card-body { display: none; }
+      .card[data-state="done"] .card-head .badge { background: var(--ok); font-size: 0; }
+      .card[data-state="done"] .card-head .badge::after { content: "✓"; font-size: 13px; }
+
+      .card-summary {
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 12px; padding: 0 18px 16px;
+      }
+      .card-summary .sum-text { color: var(--muted); }
+
+      label { display: block; font-weight: 600; font-size: 13px; margin-bottom: 12px; }
+      label .opt { color: var(--muted); font-weight: 400; }
+      input {
+        width: 100%; margin-top: 5px; padding: 10px 12px;
+        border: 1px solid var(--border); border-radius: 8px;
+        font-size: 14px; font-family: inherit; background: #fff;
+      }
+      input:focus { outline: 2px solid var(--primary); outline-offset: -1px; border-color: var(--primary); }
+      .row { display: flex; gap: 12px; }
+      .row label { flex: 1; }
+      .hint { font-size: 12px; color: var(--muted); margin: -4px 0 12px; }
+      .hint.warn { color: #9a6b00; }
+
+      .btn {
+        appearance: none; border: 0; border-radius: 8px; cursor: pointer;
+        font-size: 14px; font-weight: 600; font-family: inherit; padding: 11px 16px;
+      }
+      .btn.primary { background: var(--primary); color: #fff; width: 100%; }
+      .btn.primary:hover { background: var(--primary-press); }
+      .btn.primary:disabled { background: #9aa6b4; cursor: not-allowed; }
+      .link {
+        background: none; border: 0; color: var(--primary); cursor: pointer;
+        font-size: 13px; font-weight: 600; padding: 0;
+      }
+
+      .autocomplete { position: relative; }
+      .suggestions {
+        list-style: none; margin: 4px 0 0; padding: 4px;
+        position: absolute; left: 0; right: 0; z-index: 20;
+        background: #fff; border: 1px solid var(--border); border-radius: 8px;
+        box-shadow: 0 8px 24px rgba(0,0,0,.1); max-height: 240px; overflow: auto;
+      }
+      .suggestions li { padding: 9px 10px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+      .suggestions li:hover { background: #eef1f6; }
+
+      #payment-element { margin: 4px 0 16px; min-height: 40px; }
+
+      .done {
+        background: #eaf8f0; border: 1px solid #bfe8cf; color: #16663a;
+        border-radius: var(--radius); padding: 16px 18px; margin-bottom: 14px;
+      }
+      .done a { color: #16663a; }
+
+      .log-wrap { margin-top: 20px; }
+      .log-title {
+        font-size: 12px; font-weight: 600; text-transform: uppercase;
+        letter-spacing: .04em; color: var(--muted); margin: 0 0 8px;
+      }
+      #activity-log {
+        white-space: pre-wrap; font-size: 12px; color: #555; margin: 0;
+        background: #fff; border: 1px solid var(--border); border-radius: 8px;
+        padding: 10px; min-height: 64px; max-height: 220px; overflow: auto;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="brand">
+          <span>Ralph Lauren</span><span class="x">x</span><span class="rb">ReserveBar</span>
+        </div>
+        <p class="sub">Create a shopper, add a shipping address, then securely save a card.</p>
+      </header>
+
+      <ol class="steps">
+        <li data-step="profile" data-state="active"><span class="dot"><span>1</span></span> Profile</li>
+        <li data-step="address" data-state="locked"><span class="dot"><span>2</span></span> Address</li>
+        <li data-step="payment" data-state="locked"><span class="dot"><span>3</span></span> Payment</li>
+      </ol>
+
+      <!-- ── Step 1 — Profile ──────────────────────────────────────────────── -->
+      <section class="card" id="card-profile" data-state="active">
+        <div class="card-head"><span class="badge">1</span><h2>Shopper details</h2></div>
+        <form class="card-body" id="profile-form" novalidate>
+          <label>Email
+            <input type="email" id="f-email" placeholder="you@example.com" required />
+          </label>
+          <div class="row">
+            <label>First name
+              <input id="f-first" placeholder="Alex" required />
+            </label>
+            <label>Last name <span class="opt">(optional)</span>
+              <input id="f-last" placeholder="Doe" />
+            </label>
+          </div>
+          <label>Phone <span class="opt">(optional)</span>
+            <input id="f-phone" type="tel" placeholder="2125551234" />
+          </label>
+          <div class="row">
+            <label>Date of birth <span class="opt">(optional)</span>
+              <input id="f-dob" type="date" />
+            </label>
+            <label>Company <span class="opt">(optional)</span>
+              <input id="f-company" value="Ralph Lauren" />
+            </label>
+          </div>
+          <button class="btn primary" type="submit">Save &amp; continue</button>
+        </form>
+        <div class="card-summary"></div>
+      </section>
+
+      <!-- ── Step 2 — Address (autocomplete) ───────────────────────────────── -->
+      <section class="card" id="card-address" data-state="locked">
+        <div class="card-head"><span class="badge">2</span><h2>Shipping address</h2></div>
+        <form class="card-body" id="address-form" novalidate>
+          <div class="autocomplete">
+            <label>Search address
+              <input id="addr-search" autocomplete="off" placeholder="Start with a street number, e.g. 1 Madison Ave" />
+            </label>
+            <ul class="suggestions" id="addr-suggestions" hidden></ul>
+          </div>
+          <p class="hint" id="addr-hint">Pick a suggestion to auto-fill the fields below, or enter them manually.</p>
+
+          <label>Address line 1
+            <input id="a-one" placeholder="1 Madison Ave" required />
+          </label>
+          <label>Apt / Suite / Unit <span class="opt">(optional)</span>
+            <input id="a-two" placeholder="Apt 4B" />
+          </label>
+          <div class="row">
+            <label>City <input id="a-city" required /></label>
+            <label>State <input id="a-state" placeholder="NY" required /></label>
+          </div>
+          <div class="row">
+            <label>ZIP <input id="a-zip" placeholder="10010" required /></label>
+            <label>Country <input id="a-country" value="US" required /></label>
+          </div>
+          <button class="btn primary" type="submit">Save address &amp; continue</button>
+        </form>
+        <div class="card-summary"></div>
+      </section>
+
+      <!-- ── Step 3 — Payment ──────────────────────────────────────────────── -->
+      <section class="card" id="card-payment" data-state="locked">
+        <div class="card-head"><span class="badge">3</span><h2>Card</h2></div>
+        <div class="card-body">
+          <div id="payment-element"></div>
+          <button class="btn primary" id="save-card" disabled>Save card</button>
+        </div>
+      </section>
+
+      <div class="done" id="done" hidden></div>
+
+      <section class="log-wrap">
+        <h3 class="log-title">Activity log</h3>
+        <pre id="activity-log"></pre>
+      </section>
+    </div>
+
+    <!-- cloud-sdk UMD. Attaches the client factory at window.LiquidCommerce and the standalone
+         payment-element factory at window.LiquidCommercePaymentElement. -->
+    <script type="text/javascript" src="https://storage.googleapis.com/liquid-commerse-assets/sdk/cloud/liquidcommerce-cloud-sdk.min.js"></script>
+    <script type="module" src="/create-payment/main.js"></script>
+  </body>
+</html>

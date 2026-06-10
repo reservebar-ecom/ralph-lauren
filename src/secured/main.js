@@ -4,8 +4,6 @@ const ELEMENTS_API_KEY = "pk_92f397cf72213c9b17304f7a_ecd6b226d1e83138a8a1a75f07
 const CLOUD_API_ENV = "prod";
 const CLOUD_API_KEY = "712ef221200c9fe21e13ddd9f6a60dfe5823cf7d9f22570a15289aa6";
 
-const USER_EMAIL = "ralphlauren@liquidapp.co";
-
 const ELEMENTS_SERVICES_BASE = {
   development: "https://elements-services-development-948630220003.us-central1.run.app",
   staging: "https://elements-services-staging-948630220003.us-central1.run.app",
@@ -70,23 +68,26 @@ const PRODUCTS = [
   },
 ];
 
-async function verifyRlUser(password) {
+// The verify-rl-user endpoint was updated to validate email + password
+// (POST { email, password } → { valid: boolean }).
+async function verifyRlUser(email, password) {
   try {
     const res = await fetch(`${ELEMENTS_SERVICES_BASE_URL}/api/other/verify-rl-user`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ key: password }),
+      body: JSON.stringify({ email, password }),
     });
     if (!res.ok) return false;
     const data = await res.json().catch(() => null);
     return data?.valid === true;
   } catch (err) {
-    console.warn("[RL] Password verification failed:", err);
+    console.warn("[RL] Credential verification failed:", err);
     return false;
   }
 }
 
-function requestPassword(verify) {
+// Resolves with the authenticated email so the caller can prefill from that user.
+function requestLogin(verify) {
   return new Promise((resolve) => {
     const overlay = document.createElement("div");
     overlay.id = "rl-auth-overlay";
@@ -95,30 +96,40 @@ function requestPassword(verify) {
         <div class="rl-auth-brand">
           <span style="color:#041e3a">Ralph Lauren</span><span style="color:#6b7280">x</span><span style="color:#8B4513">ReserveBar</span>
         </div>
-        <h2 id="rl-auth-title">Enter password</h2>
-        <p>This page is password protected. Please enter the password to continue.</p>
+        <h2 id="rl-auth-title">Sign in</h2>
+        <p>Enter your email and password to continue.</p>
         <form id="rl-auth-form" novalidate>
+          <input id="rl-auth-email" type="email" autocomplete="email" placeholder="Email" aria-label="Email" />
           <input id="rl-auth-input" type="password" autocomplete="current-password" placeholder="Password" aria-label="Password" />
-          <div id="rl-auth-error">Incorrect password. Please try again.</div>
-          <button id="rl-auth-submit" type="submit">Unlock</button>
+          <div id="rl-auth-error">Invalid email or password. Please try again.</div>
+          <button id="rl-auth-submit" type="submit">Sign in</button>
         </form>
       </div>
     `;
     document.body.appendChild(overlay);
     requestAnimationFrame(() => overlay.classList.add("rl-visible"));
 
+    const emailInput = overlay.querySelector("#rl-auth-email");
     const input = overlay.querySelector("#rl-auth-input");
     const error = overlay.querySelector("#rl-auth-error");
     const form = overlay.querySelector("#rl-auth-form");
     const submit = overlay.querySelector("#rl-auth-submit");
-    input.focus();
+    emailInput.focus();
 
-    input.addEventListener("input", () => error.classList.remove("rl-show"));
+    [emailInput, input].forEach((el) =>
+      el.addEventListener("input", () => error.classList.remove("rl-show"))
+    );
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
+      const email = emailInput.value.trim();
+      const password = input.value;
+      if (!email || !password) {
+        error.classList.add("rl-show");
+        return;
+      }
       submit.disabled = true;
-      const ok = await verify(input.value);
+      const ok = await verify(email, password);
       submit.disabled = false;
       if (!ok) {
         error.classList.add("rl-show");
@@ -127,7 +138,7 @@ function requestPassword(verify) {
       }
       overlay.classList.remove("rl-visible");
       setTimeout(() => overlay.remove(), 200);
-      resolve();
+      resolve(email);
     });
   });
 }
@@ -197,7 +208,10 @@ async function initElements(products) {
           showDescription: false
         }
       }
-    }
+    },
+    // development: {
+    //   customApiUrl: "http://0.0.0.0:8080"
+    // },
   });
 
   const productElements = products.map(p => ({
@@ -225,47 +239,72 @@ async function initElements(products) {
   return client;
 }
 
-async function prefillSavedPayment(client) {
-  window.addEventListener("lce:actions.checkout_loaded", () => {
-    client.actions.checkout.toggleBillingSameAsShipping(false);
-
-    client.actions.checkout.updateBillingInfo({
-      firstName: "Kate",
-      lastName: "Zaman",
-      email: USER_EMAIL,
-      phone: "(855) 443-8144",
-      company: "Ralph Lauren",
-      addressOne: "110 CHARLTON ST",
-      addressTwo: "# 19H",
-      city: "NEW YORK",
-      state: "NY",
-      zipCode: "10014"
-    });
-  });
-
+// Prefill the storefront + checkout from the signed-in shopper (created via
+// /create-payment): shipping address on the storefront, then customer info and
+// the saved payment method once the checkout opens.
+async function prefillFromUser(client, email) {
   try {
     const cloud = await window.LiquidCommerce(CLOUD_API_KEY, {
       env: CLOUD_API_ENV,
       googlePlacesApiKey: ""
     });
 
-    const userResponse = await cloud.user.session({ email: USER_EMAIL });
-    const savedPayments = userResponse?.data?.savedPayments || [];
-    const chosenPayment = savedPayments.find(p => p.isDefault) || savedPayments[0];
-
-    if (chosenPayment && chosenPayment.id) {
-      client.actions.checkout.setSavedPaymentMethod({
-        id: chosenPayment.id,
-        card: {
-          brand: chosenPayment.card?.brand,
-          last4: chosenPayment.card?.last4,
-          expMonth: chosenPayment.card?.expMonth,
-          expYear: chosenPayment.card?.expYear
-        }
-      });
+    // session() is idempotent and returns the full user incl. addresses + savedPayments.
+    const userResponse = await cloud.user.session({ email });
+    const user = userResponse?.data;
+    if (!user) {
+      console.warn("[RL] No cloud user found for", email);
+      return;
     }
-  } catch (savedPaymentError) {
-    console.warn("[RL] Saved-payment pre-fill skipped:", savedPaymentError);
+
+    // Set the storefront (shipping) address from the user's default saved address.
+    const addr = (user.addresses || []).find(a => a.isDefault) || (user.addresses || [])[0];
+    if (addr) {
+      await client.actions.address.setAddressManually(
+        {
+          one: addr.one || "",
+          two: addr.two || "",
+          city: addr.city || "",
+          state: addr.state || "",
+          zip: addr.zip || "",
+          country: addr.country || "US",
+        },
+        { latitude: addr.lat, longitude: addr.long }
+      );
+      console.log("[RL] prefilled address:", addr.id);
+    } else {
+      console.warn("[RL] user has no saved address");
+    }
+
+    // When the checkout opens, prefill the customer info + saved payment method.
+    const pm = (user.savedPayments || []).find(p => p.isDefault) || (user.savedPayments || [])[0];
+    window.addEventListener("lce:actions.checkout_loaded", () => {
+      client.actions.checkout.updateCustomerInfo({
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        email: user.email || email,
+        phone: user.phone || "",
+        birthDate: user.birthDate || "",
+        company: user.company || "",
+      });
+
+      if (pm && pm.id && pm.card) {
+        client.actions.checkout.setSavedPaymentMethod({
+          id: pm.id,
+          card: {
+            brand: pm.card.brand,
+            last4: pm.card.last4,
+            expMonth: pm.card.expMonth,
+            expYear: pm.card.expYear,
+          },
+        });
+        console.log("[RL] prefilled saved payment method:", pm.id);
+      } else {
+        console.warn("[RL] user has no saved payment — create one at /create-payment");
+      }
+    });
+  } catch (prefillError) {
+    console.warn("[RL] Prefill skipped:", prefillError);
   }
 }
 
@@ -274,8 +313,8 @@ async function prefillSavedPayment(client) {
 // ===========================================================================
 
 document.addEventListener("DOMContentLoaded", async () => {
-  await requestPassword(verifyRlUser);
+  const email = await requestLogin(verifyRlUser);
   renderProductCards(PRODUCTS);
   const client = await initElements(PRODUCTS);
-  await prefillSavedPayment(client);
+  await prefillFromUser(client, email);
 });
