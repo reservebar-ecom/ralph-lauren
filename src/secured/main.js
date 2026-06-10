@@ -278,13 +278,16 @@ async function prefillFromUser(client, email) {
 
     // When the checkout opens, prefill the customer info + saved payment method.
     const pm = (user.savedPayments || []).find(p => p.isDefault) || (user.savedPayments || [])[0];
+    // birthDate comes back as an ISO timestamp (e.g. 1990-01-01T00:00:00.000Z);
+    // the checkout field expects a plain date, so keep only the YYYY-MM-DD part.
+    const birthDate = (user.birthDate || "").split("T")[0];
     window.addEventListener("lce:actions.checkout_loaded", () => {
       client.actions.checkout.updateCustomerInfo({
         firstName: user.firstName || "",
         lastName: user.lastName || "",
         email: user.email || email,
         phone: user.phone || "",
-        birthDate: user.birthDate || "",
+        birthDate,
         company: user.company || "",
       });
 
