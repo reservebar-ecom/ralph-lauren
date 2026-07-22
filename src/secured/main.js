@@ -1,3 +1,12 @@
+// ===========================================================================
+// Secured storefront (Elements + cloud-sdk)
+//
+// Gates the store behind an email/password sign-in, renders the product cards
+// with Liquid Commerce Elements, then prefills the storefront and checkout from
+// the signed-in shopper's saved profile, address, and payment method.
+// ===========================================================================
+
+// ── Config ─────────────────────────────────────────────────────────────────
 const ELEMENTS_API_ENV = "production";
 const ELEMENTS_API_KEY = "pk_92f397cf72213c9b17304f7a_ecd6b226d1e83138a8a1a75f078f5a4179a690e5b7827cf2a346fe3ef6234302";
 
@@ -11,6 +20,7 @@ const ELEMENTS_SERVICES_BASE = {
 };
 const ELEMENTS_SERVICES_BASE_URL = ELEMENTS_SERVICES_BASE[ELEMENTS_API_ENV];
 
+// ── Products ─────────────────────────────────────────────────────────────────
 const PRODUCTS = [
   {
     name: "Woodford Reserve Double Oaked Kentucky Bourbon Whiskey",
@@ -68,8 +78,10 @@ const PRODUCTS = [
   },
 ];
 
-// The verify-rl-user endpoint was updated to validate email + password
-// (POST { email, password } → { valid: boolean }).
+// ── Auth (sign-in overlay) ─────────────────────────────────────────────────────
+
+// Validate credentials against elements-services (POST { email, password } →
+// { valid: boolean }).
 async function verifyRlUser(email, password) {
   try {
     const res = await fetch(`${ELEMENTS_SERVICES_BASE_URL}/api/other/verify-rl-user`, {
@@ -86,7 +98,8 @@ async function verifyRlUser(email, password) {
   }
 }
 
-// Resolves with the authenticated email so the caller can prefill from that user.
+// Show the sign-in overlay and resolve with the authenticated email so the
+// caller can prefill from that user.
 function requestLogin(verify) {
   return new Promise((resolve) => {
     const overlay = document.createElement("div");
@@ -116,6 +129,7 @@ function requestLogin(verify) {
     const submit = overlay.querySelector("#rl-auth-submit");
     emailInput.focus();
 
+    // Clear the error as soon as either field is edited.
     [emailInput, input].forEach((el) =>
       el.addEventListener("input", () => error.classList.remove("rl-show"))
     );
@@ -143,6 +157,10 @@ function requestLogin(verify) {
   });
 }
 
+// ── Storefront rendering ───────────────────────────────────────────────────────
+
+// Render the product cards, alternating image/text sides per row. Each card
+// leaves an empty `content-<identifier>` node for Elements to inject into.
 function renderProductCards(products) {
   const container = document.querySelector("#products");
 
@@ -189,10 +207,10 @@ function renderProductCards(products) {
   });
 }
 
-// ===========================================================================
-// Elements / Cloud setup
-// ===========================================================================
+// ── Elements / Cloud setup ─────────────────────────────────────────────────────
 
+// Boot the Elements client: product elements, address elements, cart badges,
+// and the cart-open handlers (desktop + mobile).
 async function initElements(products) {
   window.addEventListener("lce:actions.client_ready", ({ detail: { data } }) => {
     console.log("Liquid Commerce Elements", data);
@@ -240,8 +258,8 @@ async function initElements(products) {
 }
 
 // Prefill the storefront + checkout from the signed-in shopper (created via
-// /create-payment): shipping address on the storefront, then customer info and
-// the saved payment method once the checkout opens.
+// /create-payment): the shipping address on the storefront, then customer info
+// and the saved payment method once the checkout opens.
 async function prefillFromUser(client, email) {
   try {
     const cloud = await window.LiquidCommerce(CLOUD_API_KEY, {
@@ -249,7 +267,7 @@ async function prefillFromUser(client, email) {
       googlePlacesApiKey: ""
     });
 
-    // session() is idempotent and returns the full user incl. addresses + savedPayments.
+    // session() upserts and returns the full user, incl. addresses + savedPayments.
     const userResponse = await cloud.user.session({ email });
     const user = userResponse?.data;
     if (!user) {
@@ -257,7 +275,7 @@ async function prefillFromUser(client, email) {
       return;
     }
 
-    // Set the storefront (shipping) address from the user's default saved address.
+    // Storefront shipping address, from the user's default (or first) saved address.
     const addr = (user.addresses || []).find(a => a.isDefault) || (user.addresses || [])[0];
     if (addr) {
       await client.actions.address.setAddressManually(
@@ -276,7 +294,7 @@ async function prefillFromUser(client, email) {
       console.warn("[RL] user has no saved address");
     }
 
-    // When the checkout opens, prefill the customer info + saved payment method.
+    // Once the checkout opens, prefill the customer info + saved payment method.
     const pm = (user.savedPayments || []).find(p => p.isDefault) || (user.savedPayments || [])[0];
     // birthDate comes back as an ISO timestamp (e.g. 1990-01-01T00:00:00.000Z);
     // the checkout field expects a plain date, so keep only the YYYY-MM-DD part.
@@ -311,10 +329,7 @@ async function prefillFromUser(client, email) {
   }
 }
 
-// ===========================================================================
-// Bootstrap
-// ===========================================================================
-
+// ── Bootstrap ─────────────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", async () => {
   const email = await requestLogin(verifyRlUser);
   renderProductCards(PRODUCTS);

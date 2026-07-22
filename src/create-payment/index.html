@@ -97,6 +97,31 @@
       .btn.primary { background: var(--primary); color: #fff; width: 100%; }
       .btn.primary:hover { background: var(--primary-press); }
       .btn.primary:disabled { background: #9aa6b4; cursor: not-allowed; }
+      .btn-row { display: flex; gap: 10px; align-items: center; }
+      .btn-row .btn.primary { flex: 1; width: auto; }
+      .btn.ghost { background: #eef1f6; color: var(--primary); flex: none; }
+      .btn.ghost:hover { background: #e3e8f0; }
+
+      .status {
+        font-size: 13px; padding: 9px 12px; border-radius: 8px; margin: 0 0 14px;
+        display: flex; align-items: center; gap: 8px;
+      }
+      .status::before { font-size: 14px; }
+      .status.existing { background: #eafaf0; color: #16663a; border: 1px solid #bfe8cf; }
+      .status.existing::before { content: "✓"; }
+      .status.new { background: #eef4ff; color: #1e40af; border: 1px solid #cddcff; }
+      .status.new::before { content: "＋"; }
+
+      .current-card {
+        display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+        font-size: 13px; color: var(--muted);
+        padding: 10px 12px; border: 1px solid var(--border);
+        border-radius: 8px; margin-bottom: 14px; background: #fafbfc;
+      }
+      .current-card .chip {
+        font-weight: 700; color: var(--text); text-transform: capitalize;
+        background: #eef1f6; padding: 2px 8px; border-radius: 6px;
+      }
       .link {
         background: none; border: 0; color: var(--primary); cursor: pointer;
         font-size: 13px; font-weight: 600; padding: 0;
@@ -139,7 +164,7 @@
         <div class="brand">
           <span>Ralph Lauren</span><span class="x">x</span><span class="rb">ReserveBar</span>
         </div>
-        <p class="sub">Create a shopper, add a shipping address, then securely save a card.</p>
+        <p class="sub">Create or update a shopper. Address and card are optional — you can save just the profile.</p>
       </header>
 
       <ol class="steps">
@@ -150,11 +175,20 @@
 
       <!-- ── Step 1 — Profile ──────────────────────────────────────────────── -->
       <section class="card" id="card-profile" data-state="active">
-        <div class="card-head"><span class="badge">1</span><h2>Shopper details</h2></div>
-        <form class="card-body" id="profile-form" novalidate>
+        <div class="card-head"><span class="badge">1</span><h2>Shopper</h2></div>
+
+        <!-- 1a — email lookup -->
+        <form class="card-body" id="email-form" novalidate>
           <label>Email
-            <input type="email" id="f-email" placeholder="you@example.com" required />
+            <input type="email" id="f-email" placeholder="you@example.com" required autocomplete="email" />
           </label>
+          <p class="hint">We'll load this shopper if they already exist, or start a new one.</p>
+          <button class="btn primary" type="submit">Continue</button>
+        </form>
+
+        <!-- 1b — profile details (revealed after the email lookup) -->
+        <form class="card-body" id="profile-form" novalidate hidden>
+          <div class="status" id="profile-status"></div>
           <div class="row">
             <label>First name
               <input id="f-first" placeholder="Alex" required />
@@ -174,15 +208,19 @@
               <input id="f-company" value="Ralph Lauren" />
             </label>
           </div>
-          <button class="btn primary" type="submit">Save &amp; continue</button>
+          <div class="btn-row">
+            <button class="btn primary" type="submit" id="profile-submit">Create shopper</button>
+            <button class="btn ghost" type="button" id="change-email">Change email</button>
+          </div>
         </form>
         <div class="card-summary"></div>
       </section>
 
       <!-- ── Step 2 — Address (autocomplete) ───────────────────────────────── -->
       <section class="card" id="card-address" data-state="locked">
-        <div class="card-head"><span class="badge">2</span><h2>Shipping address</h2></div>
+        <div class="card-head"><span class="badge">2</span><h2>Shipping address <span class="opt">(optional)</span></h2></div>
         <form class="card-body" id="address-form" novalidate>
+          <div class="status" id="address-status" hidden></div>
           <div class="autocomplete">
             <label>Search address
               <input id="addr-search" autocomplete="off" placeholder="Start with a street number, e.g. 1 Madison Ave" />
@@ -205,17 +243,24 @@
             <label>ZIP <input id="a-zip" placeholder="10010" required /></label>
             <label>Country <input id="a-country" value="US" required /></label>
           </div>
-          <button class="btn primary" type="submit">Save address &amp; continue</button>
+          <div class="btn-row">
+            <button class="btn primary" type="submit" id="address-submit">Save address &amp; continue</button>
+            <button class="btn ghost" type="button" id="skip-address">Skip</button>
+          </div>
         </form>
         <div class="card-summary"></div>
       </section>
 
       <!-- ── Step 3 — Payment ──────────────────────────────────────────────── -->
       <section class="card" id="card-payment" data-state="locked">
-        <div class="card-head"><span class="badge">3</span><h2>Card</h2></div>
+        <div class="card-head"><span class="badge">3</span><h2>Card <span class="opt">(optional)</span></h2></div>
         <div class="card-body">
+          <div class="current-card" id="current-card" hidden></div>
           <div id="payment-element"></div>
-          <button class="btn primary" id="save-card" disabled>Save card</button>
+          <div class="btn-row">
+            <button class="btn primary" id="save-card" disabled>Save card</button>
+            <button class="btn ghost" type="button" id="skip-payment">Skip &amp; finish</button>
+          </div>
         </div>
       </section>
 
