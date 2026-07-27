@@ -257,6 +257,27 @@ async function initElements(products) {
   return client;
 }
 
+// The cloud API returns birthDate as an ISO date/timestamp (e.g.
+// "1990-01-01T00:00:00.000Z"), but the Elements checkout birthdate field is a
+// text input validated against MM/DD/YYYY — an ISO value fails validation and
+// keeps the "Save Buyer Information" button disabled. Convert here.
+function toElementsBirthDate(value) {
+  if (!value) return "";
+  const iso = String(value).trim().match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (iso) {
+    const [, year, month, day] = iso;
+    return `${month}/${day}/${year}`;
+  }
+  // Already MM/DD/YYYY (or MM-DD-YYYY) — normalise the separators and pass through.
+  const mdy = String(value).trim().match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})$/);
+  if (mdy) {
+    const [, month, day, year] = mdy;
+    return `${month.padStart(2, "0")}/${day.padStart(2, "0")}/${year}`;
+  }
+  console.warn("[RL] Unrecognised birthDate format from API:", value);
+  return "";
+}
+
 // Prefill the storefront + checkout from the signed-in shopper (created via
 // /create-payment): the shipping address on the storefront, then customer info
 // and the saved payment method once the checkout opens.
@@ -297,8 +318,9 @@ async function prefillFromUser(client, email) {
     // Once the checkout opens, prefill the customer info + saved payment method.
     const pm = (user.savedPayments || []).find(p => p.isDefault) || (user.savedPayments || [])[0];
     // birthDate comes back as an ISO timestamp (e.g. 1990-01-01T00:00:00.000Z);
-    // the checkout field expects a plain date, so keep only the YYYY-MM-DD part.
-    const birthDate = (user.birthDate || "").split("T")[0];
+    // the Elements birthdate field expects MM/DD/YYYY.
+    const birthDate = toElementsBirthDate(user.birthDate);
+    console.log("[RL] birthDate:", user.birthDate, "→", birthDate);
     window.addEventListener("lce:actions.checkout_loaded", () => {
       client.actions.checkout.updateCustomerInfo({
         firstName: user.firstName || "",
