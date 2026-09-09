@@ -566,6 +566,6 @@ function finish() {
   done.hidden = false;
   done.innerHTML =
     `<strong>All set 🎉</strong><br/>Shopper <b>${escapeHtml(customerEmail)}</b> is saved and up to date. ` +
-    `Go to <a href="/secured/">the secured store</a> and sign in with this email — whatever profile, address ` +
+    `Go to <a href="/">the secured store</a> and sign in with this email — whatever profile, address ` +
     `and payment details are on file will be prefilled at checkout.`;
 }

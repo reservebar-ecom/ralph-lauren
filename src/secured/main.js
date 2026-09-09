@@ -14,7 +14,6 @@ const CLOUD_API_ENV = "prod";
 const CLOUD_API_KEY = "712ef221200c9fe21e13ddd9f6a60dfe5823cf7d9f22570a15289aa6";
 
 const ELEMENTS_SERVICES_BASE = {
-  development: "https://elements-services-development-948630220003.us-central1.run.app",
   staging: "https://elements-services-staging-948630220003.us-central1.run.app",
   production: "https://elements-services-production-948630220003.us-central1.run.app",
 };
@@ -227,9 +226,6 @@ async function initElements(products) {
         }
       }
     },
-    // development: {
-    //   customApiUrl: "http://0.0.0.0:8080"
-    // },
   });
 
   const productElements = products.map(p => ({
