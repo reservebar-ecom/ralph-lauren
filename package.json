@@ -5,7 +5,6 @@
   "homepage": "https://github.com/reservebar-ecom/ralph-lauren#readme",
   "author": "VesperCommerce",
   "license": "ISC",
-  "main": "src/main.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
