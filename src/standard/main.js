@@ -21,6 +21,12 @@ const PRODUCTS = [
     description: "The water's pleasing effervescence, its subtle pearly reflections, and its thirst-quenching taste have made it famous the world over."
   },
   {
+    name: "Evian Sparkling Natural Spring Water",
+    identifier: "GROUPING-2590052",
+    image: "GROUPING-2590052",
+    description: "Evian's natural spring water from the French Alps, lightly carbonated for a crisp, refreshing sparkle with its signature balanced mineral taste."
+  },
+  {
     name: "Coca-Cola",
     identifier: "GROUPING-2347344",
     image: "GROUPING-2347344",
